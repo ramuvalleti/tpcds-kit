@@ -64,7 +64,7 @@ The following command can be used to generate all 99 queries in numerical order 
 
 ```
 cd tpcds-kit/tools
-mkdir ../sql-queries
+mkdir ../sql_queries
 
 ./dsqgen -VERBOSE "Y" \
 -DIALECT netezza \
@@ -72,7 +72,7 @@ mkdir ../sql-queries
 -INPUT ../query_templates/templates.lst \
 -SCALE 10000 \
 -QUALIFY "Y" \
--OUTPUT_DIR ../sql-queries
+-OUTPUT_DIR ../sql_queries
 
 ```
 
@@ -82,6 +82,8 @@ define _END = "";
 
 If only one query file is generated instead of 99 sql files, use below bash code to generate 99 sql files -
 ```
+cd tpcds-kit/tools/sql_queries
+
 IFS=$(echo -en "\n\b")
 CNTR=1
 for T in `cat query_0.sql`
