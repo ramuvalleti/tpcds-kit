@@ -63,12 +63,36 @@ Query generation is done via `dsqgen`.   See `dsqgen --help` for all options.
 The following command can be used to generate all 99 queries in numerical order (`-QUALIFY`) for the 10TB scale factor (`-SCALE`) using the Netezza dialect template (`-DIALECT`) with the output going to `/tmp/query_0.sql` (`-OUTPUT_DIR`).
 
 ```
-dsqgen \
+cd tpcds-kit/tools
+mkdir ../sql-queries
+
+./dsqgen -VERBOSE "Y" \
+-DIALECT netezza \
 -DIRECTORY ../query_templates \
 -INPUT ../query_templates/templates.lst \
--VERBOSE Y \
--QUALIFY Y \
 -SCALE 10000 \
--DIALECT netezza \
--OUTPUT_DIR /tmp
+-QUALIFY "Y" \
+-OUTPUT_DIR ../sql-queries
+
+```
+
+### Known issues
+If there are _END errors like (ERROR: Substitution'_END' is used before being initialized at line 63 in ../query_templates/query1.tpl), add below line to end of ../query_templates/netezza.tpl
+define _END = "";
+
+If only one query file is generated instead of 99 sql files, use below bash code to generate 99 sql files -
+```
+IFS=$(echo -en "\n\b")
+CNTR=1
+for T in `cat query_0.sql`
+do
+  if [[ $T != "----" ]]; then 
+    echo $T >> query_${CNTR}.sql
+  else
+    echo "Done: $CNTR"
+    ls -l query_${CNTR}.sql
+    cat query_${CNTR}.sql
+    CNTR=$((CNTR+1)) 
+  fi
+done
 ```
